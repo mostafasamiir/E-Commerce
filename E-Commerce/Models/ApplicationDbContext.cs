@@ -16,6 +16,10 @@ namespace E_Commerce.Models
                 .OnDelete(DeleteBehavior.Cascade);
             modelBuilder.Entity<Order>().HasKey(Order => Order.Id);
             modelBuilder.Entity<OrderItem>().HasKey(OrderItem => OrderItem.Id);
+            modelBuilder.Entity<Order>().Property(o => o.TotalAmount).HasPrecision(18, 2);
+            modelBuilder.Entity<OrderItem>().Property(oi => oi.Price).HasPrecision(18, 2);
+            modelBuilder.Entity<Order>().Property(o => o.Status).HasConversion<string>();
+
         }
 
         public DbSet<Order> Orders { get; set; }
