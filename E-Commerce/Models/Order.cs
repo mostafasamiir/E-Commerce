@@ -7,11 +7,11 @@ namespace E_Commerce.Models
     public class Order
     {
        
-        public required int Id;
-        public required string CustomerEmail;
-        public decimal TotalAmount;
-        public required string Status;
-        public DateTime CreatedAt;
+        public  int Id { get; set; }
+        public required string CustomerEmail { get; set; }
+        public decimal TotalAmount { get; set; }
+        public required string Status { get; set; }
+        public DateTime CreatedAt { get; set; } = DateTime.Now;
 
         public List<OrderItem> OrderItems { get; set; }
     }

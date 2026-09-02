@@ -2,10 +2,10 @@
 {
     public class OrderItem
     {
-        public int Id;
-        public required string ProductName;
-        public int Quantity;
-        public decimal Price;
-        public int OrderId;
+        public int Id { set; get; }
+        public required string ProductName { get; set; }
+        public int Quantity { get; set; }
+        public decimal Price { get; set; }
+        public int OrderId { get; set; }
     }
 }
