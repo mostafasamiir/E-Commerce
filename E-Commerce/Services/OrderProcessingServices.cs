@@ -1,29 +1,39 @@
 ﻿using E_Commerce.Models;
+using E_Commerce.Repositories;
 
 namespace E_Commerce.Services
 {
     public class OrderProcessingServices
     {
-        private readonly IServiceScopeFactory _scopeFactory;
+        private readonly IOrderRepository _orderRepository;
+        private readonly ILogger<OrderProcessingServices> _logger;
 
-        public OrderProcessingServices(IServiceScopeFactory scopeFactory)
+        public OrderProcessingServices(
+            IOrderRepository orderRepository,
+            ILogger<OrderProcessingServices> logger)
         {
-            _scopeFactory = scopeFactory;
+            _orderRepository = orderRepository;
+            _logger = logger;
         }
 
         public async Task ProcessOrder(int orderId)
         {
-            using var scope = _scopeFactory.CreateScope(); // each job run gets its own box, uses it, then throws it away.
-            // scope(box) is a disposable object that creates a new scope for the services. This is important because it ensures that the services are disposed of properly after the job is done.
-            var dbcontext = scope.ServiceProvider.GetRequiredService<ApplicationDbContext>();// made an appdbcontext instance
-            var order = await dbcontext.Orders.FindAsync(orderId);
-            if (order != null)
+            var order = await _orderRepository.GetByIdAsync(orderId);
+            if (order is null)
             {
-                Console.WriteLine($"Simulated Email Receipt Sent to {order.CustomerEmail}");
-                await Task.Delay(5000); 
-                order.Status = "Completed";
-                await dbcontext.SaveChangesAsync();
+                _logger.LogWarning("Order {OrderId} was not found for processing.", orderId);
+                return;
             }
+
+            await Task.Delay(5000);
+
+            _logger.LogInformation(
+                "Simulated email receipt sent to {CustomerEmail} for order {OrderId}.",
+                order.CustomerEmail,
+                order.Id);
+
+            order.Status = OrderStatus.Completed;
+            await _orderRepository.UpdateAsync(order);
         }
     }
 }

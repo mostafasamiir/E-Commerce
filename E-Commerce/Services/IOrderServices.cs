@@ -1,10 +1,10 @@
-﻿using E_Commerce.Models;
+﻿using E_Commerce.DTO;
 
 namespace E_Commerce.Services
 {
     public interface IOrderServices
     {
-        Task <Order> GetById(int id);
-        Task<Order> CreateOrder(Order order);
+        Task<OrderResponseDto?> GetById(int id);
+        Task<OrderResponseDto> CreateOrder(OrdersDto dto);
     }
 }
