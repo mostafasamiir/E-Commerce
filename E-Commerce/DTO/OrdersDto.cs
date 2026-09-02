@@ -1,11 +1,15 @@
-﻿using E_Commerce.Models;
+﻿using System.ComponentModel.DataAnnotations;
 
 namespace E_Commerce.DTO
 {
     public class OrdersDto
     {
+        [Required]
+        [EmailAddress]
         public required string CustomerEmail { get; set; }
-        public decimal TotalAmount { get; set; }
-        public List<OrderItem> OrderItems { get; set; }
+
+        [Required]
+        [MinLength(1, ErrorMessage = "An order must contain at least one item.")]
+        public List<OrderItemDto> OrderItems { get; set; } = new();
     }
 }
